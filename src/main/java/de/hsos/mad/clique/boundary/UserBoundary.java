@@ -9,6 +9,7 @@ import de.hsos.mad.clique.controller.UserController;
 import de.hsos.mad.clique.entity.Users;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,7 +26,7 @@ public class UserBoundary {
     @Inject
     UserController usc;
     
-    @POST
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     public void newUser(){
         try {
