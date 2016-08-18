@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
  * @author zensd
  */
 @Entity
-public class User_Event implements Serializable {
+public class UserEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -84,10 +84,10 @@ public class User_Event implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User_Event)) {
+        if (!(object instanceof UserEvent)) {
             return false;
         }
-        User_Event other = (User_Event) object;
+        UserEvent other = (UserEvent) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -96,7 +96,7 @@ public class User_Event implements Serializable {
 
     @Override
     public String toString() {
-        return "de.hsos.mad.clique.entity.User_Event[ id=" + id + " ]";
+        return "de.hsos.mad.clique.entity.UserEvent[ id=" + id + " ]";
     }
     
 }
