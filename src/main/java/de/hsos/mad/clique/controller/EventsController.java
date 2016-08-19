@@ -39,4 +39,26 @@ public class EventsController {
         query.setParameter("clique", clique);
         query.executeUpdate();
     }
+    
+    public void deleteEventsById(long id){
+        TypedQuery<Events> query = em.createQuery("DELETE FROM Events e WHERE e.id = :id",Events.class);
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
+    
+    public void createNewEvent(Events event){
+        em.persist(event);
+    }
+    
+    public Events getEventIdByName(String name){
+        TypedQuery<Events> query = em.createQuery("SELECT e FROM Events e WHERE e.name = :name ", Events.class);
+        query.setParameter("name", name);
+        return (Events)query.getSingleResult();
+    }
+    
+    public Events getEventsById(long id){
+        TypedQuery<Events> query = em.createQuery("SELECT e FROM Events e WHERE e.id = :id ", Events.class);
+        query.setParameter("id", id);
+        return (Events)query.getSingleResult();
+    }
 }

@@ -6,7 +6,9 @@
 package de.hsos.mad.clique.boundary;
 
 import com.google.gson.Gson;
+import de.hsos.mad.clique.controller.UserCliqueController;
 import de.hsos.mad.clique.controller.UserController;
+import de.hsos.mad.clique.controller.UserEventController;
 import de.hsos.mad.clique.entity.Users;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
@@ -30,6 +32,12 @@ import javax.ws.rs.core.Response;
 public class UserBoundary {
     @Inject
     UserController usc;
+    
+    @Inject
+    UserEventController uec;
+    
+    @Inject
+    UserCliqueController ucc;
     
     private final Gson gson = new Gson();
     
@@ -164,6 +172,23 @@ public class UserBoundary {
     @Path("/delete/{id}")
     public Response deleteUserById(@PathParam("id")long id){
         try {
+            /*
+                ToDo:
+                User aus UserClique löschen
+                User aus UserEvent löschen
+                User aus User löschen
+            */
+            //User Objekt holen mit userid
+            Users tmpUser = new Users();
+            tmpUser = usc.getUserById(id);
+            
+            //User aus UserEvent löschen
+            uec.deltetUserEventsByUserId(tmpUser);
+            
+            //User aus UserClique löschen
+            ucc.deleteUserCliqueByUser(tmpUser);
+            
+            //User aus Users löschen
             usc.deleteUser(id);
             return Response.status(202).build();
         } catch (Exception e) {

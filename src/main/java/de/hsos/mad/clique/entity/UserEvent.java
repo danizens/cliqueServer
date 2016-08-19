@@ -74,6 +74,14 @@ public class UserEvent implements Serializable {
         this.event = event;
     }
 
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

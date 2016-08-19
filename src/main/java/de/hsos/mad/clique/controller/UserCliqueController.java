@@ -7,6 +7,8 @@ package de.hsos.mad.clique.controller;
 
 import de.hsos.mad.clique.entity.Clique;
 import de.hsos.mad.clique.entity.UserClique;
+import de.hsos.mad.clique.entity.Users;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -35,5 +37,17 @@ public class UserCliqueController {
         TypedQuery<UserClique> query = em.createQuery("DELETE FROM UserClique uc WHERE uc.clique = :cl", UserClique.class);
         query.setParameter("cl", cl);
         query.executeUpdate();
+    }
+    
+    public void deleteUserCliqueByUser(Users user){
+        TypedQuery<UserClique> query = em.createQuery("DELETE FROM UserClique uc WHERE uc.user = :user", UserClique.class);
+        query.setParameter("user", user);
+        query.executeUpdate();
+    }
+    
+    public List<UserClique> getUserByCliqueId(Clique cl){
+        TypedQuery<UserClique> query = em.createQuery("SELECT uc FROM UserClique uc WHERE uc.clique = :clique",UserClique.class);
+        query.setParameter("clique", cl);
+        return (List<UserClique>)query.getResultList();
     }
 }

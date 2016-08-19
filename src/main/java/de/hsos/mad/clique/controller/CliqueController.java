@@ -50,7 +50,7 @@ public class CliqueController {
     }
     
     public Clique getCliqueByID(long id){
-        TypedQuery<Clique> query = em.createQuery("SELECT Clique c FROM Clique c WHERE c.id = :id",Clique.class);
+        TypedQuery<Clique> query = em.createQuery("SELECT c FROM Clique c WHERE c.id = :id",Clique.class);
         query.setParameter("id", id);
         return (Clique)query.getSingleResult();
     }

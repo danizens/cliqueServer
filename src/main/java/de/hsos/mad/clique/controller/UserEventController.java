@@ -7,6 +7,7 @@ package de.hsos.mad.clique.controller;
 
 import de.hsos.mad.clique.entity.Events;
 import de.hsos.mad.clique.entity.UserEvent;
+import de.hsos.mad.clique.entity.Users;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -30,5 +31,16 @@ public class UserEventController {
     public void deleteUserEventsByEventId(Events event){
         TypedQuery<UserEvent> query = em.createQuery("DELETE FROM UserEvent ue WHERE ue.event = :event", UserEvent.class);
         query.setParameter("event", event);
+        query.executeUpdate();
+    }
+    
+    public void deltetUserEventsByUserId(Users user){
+        TypedQuery<UserEvent> query = em.createQuery("DELETE FROM UserEvent ue WHERE ue.user = :users", UserEvent.class);
+        query.setParameter("users", user);
+        query.executeUpdate();
+    }
+    
+    public void createUserEvent(UserEvent ue){
+        em.persist(ue);
     }
 }
