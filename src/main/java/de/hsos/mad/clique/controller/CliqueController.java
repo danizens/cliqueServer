@@ -6,6 +6,7 @@
 package de.hsos.mad.clique.controller;
 
 import de.hsos.mad.clique.entity.Clique;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -28,6 +29,11 @@ public class CliqueController {
     
     public void createClique(Clique clique){
         em.persist(clique);
+    }
+    
+    public List<Clique> getCliqueAll(){
+        TypedQuery<Clique> query = em.createQuery("SELECT c FROM Clique c", Clique.class);
+        return (List<Clique>)query.getResultList();
     }
     
     public Clique getCliqueByName(String name){

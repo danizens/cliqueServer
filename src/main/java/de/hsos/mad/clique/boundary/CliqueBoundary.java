@@ -7,11 +7,15 @@ package de.hsos.mad.clique.boundary;
 
 import com.google.gson.Gson;
 import de.hsos.mad.clique.controller.CliqueController;
+import de.hsos.mad.clique.controller.EventsController;
 import de.hsos.mad.clique.controller.UserCliqueController;
 import de.hsos.mad.clique.controller.UserController;
+import de.hsos.mad.clique.controller.UserEventController;
 import de.hsos.mad.clique.entity.Clique;
+import de.hsos.mad.clique.entity.Events;
 import de.hsos.mad.clique.entity.UserClique;
 import de.hsos.mad.clique.entity.Users;
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
@@ -40,10 +44,17 @@ public class CliqueBoundary {
     @Inject
     UserController usc;
     
+    @Inject
+    EventsController evc;
+    
+    @Inject
+    UserEventController uev;
+    
     private final Gson gson = new Gson();
     
     @GET
     @Path("/create/{userid}/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response newClique(@PathParam("userid")long userid, @PathParam("name")String name){
         try {
             //User Objekt holen
@@ -70,8 +81,21 @@ public class CliqueBoundary {
         }
     }
     
+    @GET
+    @Path("/all")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllClique(){
+        try {
+            List<Clique> tmpList = clc.getCliqueAll();
+            return Response.accepted(gson.toJson(tmpList)).build();
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
+    }
+    
     @PUT
     @Path("/update/{cliquenid}/{newname}")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response updateCliqueName(@PathParam("cliquenid")long cliquenid, @PathParam("newname")String newname){
         try {
             clc.updateCliqueNameById(cliquenid, newname);
@@ -83,21 +107,46 @@ public class CliqueBoundary {
     
     @DELETE
     @Path("/delete/{cliquenid}")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response deleteCliqueById(@PathParam("cliquenid")long cliquenid){
         try {
             /*ToDo:
                 Löschen der Clique aus Events mit CliqueID.
                 Löschen aller User_Events die mit der Clique verbunden waren.
             */
-            
-            //Löschen der Clique aus UserClique mit allen Usern die in der Clique waren
+            //Get CliqueById
             Clique tmpClique = new Clique();
             tmpClique = clc.getCliqueByID(cliquenid);
+            
+            //Alle EventIDs holen die gelöscht werden sollen.
+            List<Events> tmpEventList = evc.getEventsByClique(tmpClique);
+            
+            //Löschen der Events aus UserEvent
+            for(int i = 0; i < tmpEventList.size(); i++){
+                uev.deleteUserEventsByEventId(tmpEventList.get(i));
+            }
+            
+            //Alle Events löschen mit CliqueID
+            evc.deleteEventsByClique(tmpClique);
+            
+            //Löschen der Clique aus UserClique mit allen Usern die in der Clique waren
             ucc.deleteUserCliqueByCliqueId(tmpClique);
             
             //Löschen der Clique aus Tabelle Clique
             clc.deleteCliqueById(cliquenid);
             return Response.status(202).build();
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
+    }
+    
+    @GET
+    @Path("/id/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getCliqueIdByName(@PathParam("name")String name){
+        try {
+            Clique tmpClique = clc.getCliqueByName(name);
+            return Response.accepted(gson.toJson(tmpClique.getId())).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
