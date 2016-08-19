@@ -50,4 +50,8 @@ public class UserCliqueController {
         query.setParameter("clique", cl);
         return (List<UserClique>)query.getResultList();
     }
+    
+    public void addUserToCliqueUser(UserClique uc){
+        em.persist(uc);
+    }
 }

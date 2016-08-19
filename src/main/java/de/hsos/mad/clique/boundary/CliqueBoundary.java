@@ -14,6 +14,7 @@ import de.hsos.mad.clique.controller.UserEventController;
 import de.hsos.mad.clique.entity.Clique;
 import de.hsos.mad.clique.entity.Events;
 import de.hsos.mad.clique.entity.UserClique;
+import de.hsos.mad.clique.entity.UserEvent;
 import de.hsos.mad.clique.entity.Users;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
@@ -147,6 +148,41 @@ public class CliqueBoundary {
         try {
             Clique tmpClique = clc.getCliqueByName(name);
             return Response.accepted(gson.toJson(tmpClique.getId())).build();
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
+    }
+    
+    @GET
+    @Path("/add/{userid}/{cliquename}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response addUserToClique(@PathParam("userid")long userid, @PathParam("cliquename")String cliquename){
+        try {
+            //User Objekt holen
+            Users tmpUser = new Users();
+            tmpUser = usc.getUserById(userid);
+            //Cliquen Objekt holen
+            Clique tmpClique = new Clique();
+            tmpClique = clc.getCliqueByName(cliquename);
+            //UserCliquen Objekt anlegen und hinzufügen
+            UserClique tmpUserClique = new UserClique();
+            tmpUserClique.setClique(tmpClique);
+            tmpUserClique.setUser(tmpUser);
+            ucc.addUserToCliqueUser(tmpUserClique);
+            
+            //Events der Clique laden und in UserEvents eintragen
+            List<Events> tmpEventList = evc.getEventsByClique(tmpClique);
+            for(int i = 0; i < tmpEventList.size();i++){
+                UserEvent tmpUserEvent = new UserEvent();
+                tmpUserEvent.setUser(tmpUser);
+                tmpUserEvent.setEvent(tmpEventList.get(i));
+                tmpUserEvent.setOffen(true);
+                tmpUserEvent.setZusagen(false);
+                tmpUserEvent.setAbsagen(false);
+                uev.createUserEvent(tmpUserEvent);
+            }
+            
+            return Response.status(202).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }

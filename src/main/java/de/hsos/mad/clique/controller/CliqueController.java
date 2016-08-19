@@ -6,6 +6,7 @@
 package de.hsos.mad.clique.controller;
 
 import de.hsos.mad.clique.entity.Clique;
+import de.hsos.mad.clique.entity.Users;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
