@@ -31,14 +31,20 @@ public class UserController {
         em.persist(newUser);
     }
     
+    public List<Users> getDuplicatedUsers(String email){
+        TypedQuery<Users> query = em.createQuery("SELECT u FROM Users u WHERE u.email = :email",Users.class);
+        query.setParameter("email", email);
+        return (List<Users>)query.getResultList();
+    }
+    
     public List<Users> getAllUsers(){
         TypedQuery<Users> query = em.createQuery("SELECT u FROM Users u", Users.class);
         return (List<Users>)query.getResultList();
     }
     
-    public List<Users> getUserLogin(String username, String password){
-        TypedQuery<Users> query = em.createQuery("SELECT u FROM Users u WHERE u.name = :username AND u.password = :password",Users.class);
-        query.setParameter("username", username);
+    public List<Users> getUserLogin(String email, String password){
+        TypedQuery<Users> query = em.createQuery("SELECT u FROM Users u WHERE u.email = :email AND u.password = :password",Users.class);
+        query.setParameter("email", email);
         query.setParameter("password", password);
         return (List<Users>)query.getResultList();
     }

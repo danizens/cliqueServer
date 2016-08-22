@@ -46,12 +46,20 @@ public class UserBoundary {
     @Produces({MediaType.APPLICATION_JSON})
     public Response newUser(@PathParam("email")String email, @PathParam("name")String name, @PathParam("password")String password){
         try {
-            Users newus = new Users();
-            newus.setEmail(email);
-            newus.setName(name);
-            newus.setPassword(password);
-            usc.createUser(newus);
-            return Response.status(202).build();
+            boolean userCreated = true;
+            List<Users> tmpUser = usc.getDuplicatedUsers(email);
+            //Duplikat Prüfung
+            if(tmpUser.size() < 1){
+                Users newus = new Users();
+                newus.setEmail(email);
+                newus.setName(name);
+                newus.setPassword(password);
+                usc.createUser(newus);
+            }else{
+                userCreated = false;
+            }
+            
+            return Response.accepted(gson.toJson(userCreated)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
@@ -70,12 +78,12 @@ public class UserBoundary {
     }
     
     @GET
-    @Path("/login/{name}/{password}")
+    @Path("/login/{email}/{password}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUserLogin(@PathParam("name")String name, @PathParam("password")String password){
+    public Response getUserLogin(@PathParam("email")String email, @PathParam("password")String password){
         boolean login = true;
         try {
-            List<Users> tmpList = usc.getUserLogin(name, password);
+            List<Users> tmpList = usc.getUserLogin(email, password);
             if(tmpList.size() < 1){
                 login = false;
             }
