@@ -164,7 +164,7 @@ public class EventsBoundary {
             for(int i = 0; i < tmpEventList.size(); i++){
                 CustomEventResponse tmpCMR = new CustomEventResponse();  
                 String[] tmpSplit;
-                tmpSplit = tmpEventList.get(i).getPlace().split("\\s");
+                tmpSplit = tmpEventList.get(i).getPlace().split("+");
                 tmpCMR.setId(tmpEventList.get(i).getId());
                 tmpCMR.setCliqueId(tmpEventList.get(i).getClique().getId());
                 tmpCMR.setEventCity(tmpSplit[0]);
