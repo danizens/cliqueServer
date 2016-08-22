@@ -16,6 +16,7 @@ import de.hsos.mad.clique.entity.Events;
 import de.hsos.mad.clique.entity.UserClique;
 import de.hsos.mad.clique.entity.UserEvent;
 import de.hsos.mad.clique.entity.Users;
+import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -183,6 +184,28 @@ public class CliqueBoundary {
             }
             
             return Response.status(202).build();
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
+    }
+    
+    @GET
+    @Path("user/{userid}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getUserInCliqueByUserId(@PathParam("userid")long id){
+        try {
+            //User Objekt holen
+            Users tmpUser = usc.getUserById(id);
+            
+            //List mit Ciquen holen
+            List<UserClique> tmpUserCLiqueList = ucc.getCliqueByUserId(tmpUser);
+            List<Clique> tmpCliqueList = new ArrayList();
+            //Cliquen aus Clique holen
+            for(int i = 0; i < tmpUserCLiqueList.size(); i++){
+                UserClique tmpUserClique = tmpUserCLiqueList.get(i);
+                tmpCliqueList.add(clc.getCliqueByID(tmpUserClique.getClique().getId()));
+            }
+            return Response.accepted(gson.toJson(tmpCliqueList)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }

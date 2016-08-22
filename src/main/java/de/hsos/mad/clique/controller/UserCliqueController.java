@@ -51,6 +51,12 @@ public class UserCliqueController {
         return (List<UserClique>)query.getResultList();
     }
     
+    public List<UserClique> getCliqueByUserId(Users user){
+        TypedQuery<UserClique> query = em.createQuery("SELECT uc FROM UserClique uc WHERE uc.user = :user",UserClique.class);
+        query.setParameter("user", user);
+        return (List<UserClique>)query.getResultList();
+    }
+    
     public void addUserToCliqueUser(UserClique uc){
         em.persist(uc);
     }
