@@ -6,6 +6,9 @@
 package de.hsos.mad.clique.boundary;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import de.hsos.mad.clique.communication.CustomResponse;
 import de.hsos.mad.clique.controller.UserCliqueController;
 import de.hsos.mad.clique.controller.UserController;
 import de.hsos.mad.clique.controller.UserEventController;
@@ -21,6 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  *
@@ -40,13 +44,14 @@ public class UserBoundary {
     UserCliqueController ucc;
     
     private final Gson gson = new Gson();
+    private final JsonParser parser = new JsonParser();
     
     @GET
     @Path("/new/{email}/{name}/{password}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response newUser(@PathParam("email")String email, @PathParam("name")String name, @PathParam("password")String password){
         try {
-            boolean userCreated = true;
+            CustomResponse tmpCr = new CustomResponse(true);
             List<Users> tmpUser = usc.getDuplicatedUsers(email);
             //Duplikat Prüfung
             if(tmpUser.size() < 1){
@@ -56,10 +61,9 @@ public class UserBoundary {
                 newus.setPassword(password);
                 usc.createUser(newus);
             }else{
-                userCreated = false;
+                tmpCr.setSuccess(false);
             }
-            
-            return Response.accepted(gson.toJson(userCreated)).build();
+            return Response.accepted(gson.toJson(tmpCr)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
