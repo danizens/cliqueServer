@@ -43,4 +43,40 @@ public class UserEventController {
     public void createUserEvent(UserEvent ue){
         em.persist(ue);
     }
+    
+    public void updateEventStatus(Events event, Users user, boolean status){
+        if(status == true){
+            TypedQuery<Events> query1 = em.createQuery("UPDATE UserEvent ue SET ue.zusagen = :accepted  WHERE ue.event = :event AND ue.user = :user", Events.class);
+            query1.setParameter("accepted", true);
+            query1.setParameter("event", event);
+            query1.setParameter("user", user);
+            query1.executeUpdate();
+            TypedQuery<Events> query2 = em.createQuery("UPDATE UserEvent ue SET ue.absagen = :declined  WHERE ue.event = :event1 AND ue.user = :user1", Events.class);
+            query2.setParameter("declined", false);
+            query2.setParameter("event1", event);
+            query2.setParameter("user1", user);
+            query2.executeUpdate();
+            TypedQuery<Events> query3 = em.createQuery("UPDATE UserEvent ue SET ue.offen = :open  WHERE ue.event = :event2 AND ue.user = :user2", Events.class);
+            query3.setParameter("open", false);
+            query3.setParameter("event2", event);
+            query3.setParameter("user2", user);
+            query3.executeUpdate();
+        }else{
+            TypedQuery<Events> query1 = em.createQuery("UPDATE UserEvent ue SET ue.zusagen = :accepted  WHERE ue.event = :event AND ue.user = :user", Events.class);
+            query1.setParameter("accepted", false);
+            query1.setParameter("event", event);
+            query1.setParameter("user", user);
+            query1.executeUpdate();
+            TypedQuery<Events> query2 = em.createQuery("UPDATE UserEvent ue SET ue.absagen = :declined  WHERE ue.event = :event1 AND ue.user = :user1", Events.class);
+            query2.setParameter("declined", true);
+            query2.setParameter("event1", event);
+            query2.setParameter("user1", user);
+            query2.executeUpdate();
+            TypedQuery<Events> query3 = em.createQuery("UPDATE UserEvent ue SET ue.offen = :open  WHERE ue.event = :event2 AND ue.user = :user2", Events.class);
+            query3.setParameter("open", false);
+            query3.setParameter("event2", event);
+            query3.setParameter("user2", user);
+            query3.executeUpdate();
+        }
+    }
 }

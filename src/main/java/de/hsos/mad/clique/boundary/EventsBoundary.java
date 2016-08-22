@@ -21,6 +21,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -53,7 +54,7 @@ public class EventsBoundary {
     private final Gson gson = new Gson();
     
     @GET
-    @Path("/create/{cliquenid}/{name}/{street}/{plz}/{place}/{description}/{date}")
+    @Path("create/{cliquenid}/{name}/{street}/{plz}/{place}/{description}/{date}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response createNewEvent(@PathParam("cliquenid")long id, @PathParam("name")String name,
             @PathParam("street")String street, @PathParam("plz")String plz, @PathParam("place")String place,
@@ -100,7 +101,7 @@ public class EventsBoundary {
     }
     
     @DELETE
-    @Path("/delete/{id}")
+    @Path("delete/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deleteEventById(@PathParam("id")long id){
         /*
@@ -122,5 +123,24 @@ public class EventsBoundary {
         } catch (Exception e) {
             return Response.status(404).build();
         }  
+    }
+    
+    @PUT
+    @Path("update/{userid}/{eventid}/{status}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response updateEventStatus(@PathParam("userid")long userid, @PathParam("eventid")long eventid, @PathParam("status")boolean status){
+        try {
+            Users tmpUser = new Users();
+            tmpUser = usc.getUserById(userid);
+            
+            Events tmpEvent = new Events();
+            tmpEvent = evc.getEventsById(eventid);
+            
+            uec.updateEventStatus(tmpEvent, tmpUser, status );
+            return Response.status(202).build();
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
+ 
     }
 }
