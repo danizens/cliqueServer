@@ -84,7 +84,7 @@ public class EventsBoundary {
             CustomEventResponse tmpCMR = new CustomEventResponse();
             String[] tmpSplit;
             
-            tmpSplit = tmpEvent.getStreet().split("+");
+            tmpSplit = tmpEvent.getStreet().split("\\+");
             
             tmpCMR.setId(tmpEvent.getId());
             tmpCMR.setCliqueId(tmpEvent.getClique().getId());
@@ -114,7 +114,7 @@ public class EventsBoundary {
                 tmpUserEvent.setAbsagen(false);
                 tmpUserEvent.setOffen(true);
                 tmpUserEvent.setZusagen(false);
-                //uec.createUserEvent(tmpUserEvent);
+                uec.createUserEvent(tmpUserEvent);
             }
             
             return Response.accepted(gson.toJson(tmpCMR)).build();
@@ -180,12 +180,11 @@ public class EventsBoundary {
             
             List<Events> tmpEventList = new ArrayList<>();
             tmpEventList = evc.getEventsByClique(tmpClique);
-            
             List<CustomEventResponse> tmpCERList = new ArrayList<>();
             for(int i = 0; i < tmpEventList.size(); i++){
                 CustomEventResponse tmpCMR = new CustomEventResponse();  
                 String[] tmpSplit;
-                tmpSplit = tmpEventList.get(i).getStreet().split("+");
+                tmpSplit = tmpEventList.get(i).getStreet().split("\\+");
                 tmpCMR.setId(tmpEventList.get(i).getId());
                 tmpCMR.setCliqueId(tmpEventList.get(i).getClique().getId());
                 tmpCMR.setEventStreet(tmpSplit[0]);
@@ -196,7 +195,7 @@ public class EventsBoundary {
                 tmpCMR.setEventDate(tmpEventList.get(i).getCreateDate());
                 tmpCMR.setEventDescription(tmpEventList.get(i).getDescription());
                 tmpCMR.setEventName(tmpEventList.get(i).getName());
-                
+                //System.out.println();
                 UserEvent tmpUE = uec.getUserEventByEventIdUserId(tmpUser, tmpEventList.get(i));
                 
                 tmpCMR.setOpen(tmpUE.isOffen());
