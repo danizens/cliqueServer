@@ -83,13 +83,15 @@ public class EventsBoundary {
             //CustomEventResponse mappen
             CustomEventResponse tmpCMR = new CustomEventResponse();
             String[] tmpSplit;
-            tmpSplit = tmpEvent.getPlace().split("+");
+            
+            tmpSplit = tmpEvent.getStreet().split("+");
+            
             tmpCMR.setId(tmpEvent.getId());
             tmpCMR.setCliqueId(tmpEvent.getClique().getId());
-            tmpCMR.setEventCity(tmpSplit[0]);
+            tmpCMR.setEventStreet(tmpSplit[0]);
             int number = Integer.parseInt(tmpSplit[1]);
-
             tmpCMR.setEventZip(number);
+            tmpCMR.setEventCity(tmpEvent.getPlace());
             tmpCMR.setEventDate(tmpEvent.getCreateDate());
             tmpCMR.setEventDescription(tmpEvent.getDescription());
             tmpCMR.setEventName(tmpEvent.getName());
@@ -112,7 +114,7 @@ public class EventsBoundary {
                 tmpUserEvent.setAbsagen(false);
                 tmpUserEvent.setOffen(true);
                 tmpUserEvent.setZusagen(false);
-                uec.createUserEvent(tmpUserEvent);
+                //uec.createUserEvent(tmpUserEvent);
             }
             
             return Response.accepted(gson.toJson(tmpCMR)).build();
@@ -183,11 +185,12 @@ public class EventsBoundary {
             for(int i = 0; i < tmpEventList.size(); i++){
                 CustomEventResponse tmpCMR = new CustomEventResponse();  
                 String[] tmpSplit;
-                tmpSplit = tmpEventList.get(i).getPlace().split("+");
+                tmpSplit = tmpEventList.get(i).getStreet().split("+");
                 tmpCMR.setId(tmpEventList.get(i).getId());
                 tmpCMR.setCliqueId(tmpEventList.get(i).getClique().getId());
-                tmpCMR.setEventCity(tmpSplit[0]);
+                tmpCMR.setEventStreet(tmpSplit[0]);
                 int number = Integer.parseInt(tmpSplit[1]);
+                tmpCMR.setEventCity(tmpEventList.get(i).getPlace());
                 
                 tmpCMR.setEventZip(number);
                 tmpCMR.setEventDate(tmpEventList.get(i).getCreateDate());
