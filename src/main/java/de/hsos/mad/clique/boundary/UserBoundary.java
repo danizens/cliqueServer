@@ -9,10 +9,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.hsos.mad.clique.communication.CustomResponse;
+import de.hsos.mad.clique.controller.CliqueController;
 import de.hsos.mad.clique.controller.UserCliqueController;
 import de.hsos.mad.clique.controller.UserController;
 import de.hsos.mad.clique.controller.UserEventController;
+import de.hsos.mad.clique.entity.Clique;
+import de.hsos.mad.clique.entity.UserClique;
 import de.hsos.mad.clique.entity.Users;
+import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -42,6 +46,9 @@ public class UserBoundary {
     
     @Inject
     UserCliqueController ucc;
+    
+    @Inject
+    CliqueController clc;
     
     private final Gson gson = new Gson();
     private final JsonParser parser = new JsonParser();
@@ -182,6 +189,7 @@ public class UserBoundary {
     
     @DELETE
     @Path("/delete/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response deleteUserById(@PathParam("id")long id){
         try {
             /*

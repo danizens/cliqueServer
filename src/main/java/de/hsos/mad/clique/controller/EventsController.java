@@ -61,4 +61,10 @@ public class EventsController {
         query.setParameter("id", id);
         return (Events)query.getSingleResult();
     }
+    
+    public Events getEventsByCliqueId(Clique cl){
+        TypedQuery<Events> query = em.createQuery("SELECT e FROM Events e WHERE e.clique = :cl ", Events.class);
+        query.setParameter("cl", cl);
+        return (Events)query.getSingleResult();
+    }
 }

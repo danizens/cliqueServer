@@ -16,6 +16,7 @@ import de.hsos.mad.clique.entity.Events;
 import de.hsos.mad.clique.entity.UserClique;
 import de.hsos.mad.clique.entity.UserEvent;
 import de.hsos.mad.clique.entity.Users;
+import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -141,6 +142,37 @@ public class EventsBoundary {
         } catch (Exception e) {
             return Response.status(404).build();
         }
- 
+    }
+    
+    @GET
+    @Path("get/{userid}/{cliquenid}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllEventsByUserAndClique(@PathParam("userid")long userid, @PathParam("cliquenid")long cliquenid){
+        try {
+            //User holen
+            Users tmpUser = new Users();
+            tmpUser = usc.getUserById(userid);
+            
+            //Clique holen in denen der User drin ist
+            List<UserClique> tmpUserCliqueList = ucc.getCliqueByUserId(tmpUser);
+            
+            //CliquenObjekte durchgehen
+            List<Clique> tmpCliqueList = new ArrayList<>();
+            for(int i = 0; i < tmpUserCliqueList.size(); i++){
+                Clique cl = tmpUserCliqueList.get(i).getClique();
+                //System.out.println(cl.getId());
+                tmpCliqueList.add(clc.getCliqueByID(cl.getId()));
+                //tmpCliqueList.add(cl);
+            }
+            
+            List<Events> tmpEventList = new ArrayList<>();
+            for(int i = 0; i < tmpCliqueList.size();i++){
+                tmpEventList.add(evc.getEventsByCliqueId(tmpCliqueList.get(i)));
+            }
+            
+            return Response.accepted(gson.toJson(tmpUserCliqueList)).build();
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
     }
 }
