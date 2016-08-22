@@ -90,7 +90,8 @@ public class EventsBoundary {
             tmpCMR.setCliqueId(tmpEvent.getClique().getId());
             tmpCMR.setEventStreet(tmpSplit[0]);
             int number = Integer.parseInt(tmpSplit[1]);
-            tmpCMR.setEventZip(number);
+            tmpCMR.setEventStreetnumber(number);
+            tmpCMR.setEventZip(Integer.parseInt(tmpEvent.getPlz()));
             tmpCMR.setEventCity(tmpEvent.getPlace());
             tmpCMR.setEventDate(tmpEvent.getCreateDate());
             tmpCMR.setEventDescription(tmpEvent.getDescription());
