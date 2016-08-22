@@ -96,7 +96,7 @@ public class EventsBoundary {
                 uec.createUserEvent(tmpUserEvent);
             }
             
-            return Response.status(202).build();
+            return Response.accepted(gson.toJson(tmpEvent)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
