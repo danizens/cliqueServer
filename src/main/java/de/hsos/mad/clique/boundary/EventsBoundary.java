@@ -80,6 +80,25 @@ public class EventsBoundary {
             //EventId holen
             tmpEvent = evc.getEventIdByName(tmpEvent.getName());
             
+            //CustomEventResponse mappen
+            CustomEventResponse tmpCMR = new CustomEventResponse();
+            String[] tmpSplit;
+            tmpSplit = tmpEvent.getPlace().split("+");
+            tmpCMR.setId(tmpEvent.getId());
+            tmpCMR.setCliqueId(tmpEvent.getClique().getId());
+            tmpCMR.setEventCity(tmpSplit[0]);
+            int number = Integer.parseInt(tmpSplit[1]);
+
+            tmpCMR.setEventZip(number);
+            tmpCMR.setEventDate(tmpEvent.getCreateDate());
+            tmpCMR.setEventDescription(tmpEvent.getDescription());
+            tmpCMR.setEventName(tmpEvent.getName());
+
+            tmpCMR.setOpen(true);
+            tmpCMR.setAccepted(false);
+            tmpCMR.setCanceled(false);
+            
+            
             //Event in UserEvent eintragen
             List<UserClique>tmpUCList = ucc.getUserByCliqueId(tmpClique);
             for(int i = 0; i < tmpUCList.size();i++){
@@ -96,7 +115,7 @@ public class EventsBoundary {
                 uec.createUserEvent(tmpUserEvent);
             }
             
-            return Response.accepted(gson.toJson(tmpEvent)).build();
+            return Response.accepted(gson.toJson(tmpCMR)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
