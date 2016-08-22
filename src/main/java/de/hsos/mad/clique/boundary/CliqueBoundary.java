@@ -6,6 +6,7 @@
 package de.hsos.mad.clique.boundary;
 
 import com.google.gson.Gson;
+import de.hsos.mad.clique.communication.CustomResponse;
 import de.hsos.mad.clique.controller.CliqueController;
 import de.hsos.mad.clique.controller.EventsController;
 import de.hsos.mad.clique.controller.UserCliqueController;
@@ -59,6 +60,7 @@ public class CliqueBoundary {
     @Produces({MediaType.APPLICATION_JSON})
     public Response newClique(@PathParam("userid")long userid, @PathParam("name")String name){
         try {
+            CustomResponse tmpCr = new CustomResponse(true);
             //User Objekt holen
             Users tmpUser = new Users();
             tmpUser = usc.getUserById(userid);
@@ -77,7 +79,7 @@ public class CliqueBoundary {
             uc.setClique(tmpClique);
             uc.setUser(tmpUser);
             ucc.createNewUserClique(uc);
-            return Response.status(202).build();
+            return Response.accepted(gson.toJson(tmpCr)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
