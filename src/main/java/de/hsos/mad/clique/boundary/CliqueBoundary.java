@@ -79,7 +79,7 @@ public class CliqueBoundary {
             uc.setClique(tmpClique);
             uc.setUser(tmpUser);
             ucc.createNewUserClique(uc);
-            return Response.accepted(gson.toJson(tmpCr)).build();
+            return Response.accepted(gson.toJson(tmpClique)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
