@@ -206,7 +206,7 @@ public class EventsBoundary {
             }
             return Response.accepted(gson.toJson(tmpCERList)).build();
         } catch (Exception e) {
-            CustomEventResponse tmpCMR = new CustomEventResponse();
+            List<CustomEventResponse> tmpCMR = new ArrayList<>();
             return Response.accepted(gson.toJson(tmpCMR)).build();
         }
     }
