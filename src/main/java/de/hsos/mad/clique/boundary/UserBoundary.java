@@ -85,13 +85,13 @@ public class UserBoundary {
     @Path("/login/{email}/{password}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUserLogin(@PathParam("email")String email, @PathParam("password")String password){
-        boolean login = true;
+        CustomResponse tmpCr = new CustomResponse(true);
         try {
             List<Users> tmpList = usc.getUserLogin(email, password);
             if(tmpList.size() < 1){
-                login = false;
+                tmpCr.setSuccess(false);
             }
-            return Response.accepted(gson.toJson(login)).build();
+            return Response.accepted(gson.toJson(tmpCr)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
