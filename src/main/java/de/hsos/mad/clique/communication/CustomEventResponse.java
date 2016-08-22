@@ -13,13 +13,13 @@ public class CustomEventResponse {
     
     long id;
     long cliqueId;
-    String eventName;
-    String eventStreet;
+    String eventName = "";
+    String eventStreet = "";
     int eventStreetnumber;
     int eventZip;
-    String eventCity;
-    String eventDescription;
-    String eventDate;
+    String eventCity = "";
+    String eventDescription = "";
+    String eventDate = "";
     boolean open;
     boolean accepted;
     boolean canceled;
