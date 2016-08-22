@@ -81,4 +81,11 @@ public class UserEventController {
             query3.executeUpdate();
         }
     }
+    
+    public UserEvent getUserEventByEventIdUserId(Users user, Events event){
+        TypedQuery<UserEvent> query = em.createQuery("SELECT ue FROM UserEvent ue WHERE ue.event = :event AND ue.user = :user", UserEvent.class);
+        query.setParameter("event", event);
+        query.setParameter("user", user);
+        return (UserEvent)query.getSingleResult();
+    }
 }

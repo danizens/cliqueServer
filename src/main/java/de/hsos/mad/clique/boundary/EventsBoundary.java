@@ -6,6 +6,7 @@
 package de.hsos.mad.clique.boundary;
 
 import com.google.gson.Gson;
+import de.hsos.mad.clique.communication.CustomEventResponse;
 import de.hsos.mad.clique.controller.CliqueController;
 import de.hsos.mad.clique.controller.EventsController;
 import de.hsos.mad.clique.controller.UserCliqueController;
@@ -153,24 +154,35 @@ public class EventsBoundary {
             Users tmpUser = new Users();
             tmpUser = usc.getUserById(userid);
             
-            //Clique holen in denen der User drin ist
-            List<UserClique> tmpUserCliqueList = ucc.getCliqueByUserId(tmpUser);
-            
-            //CliquenObjekte durchgehen
-            List<Clique> tmpCliqueList = new ArrayList<>();
-            for(int i = 0; i < tmpUserCliqueList.size(); i++){
-                Clique cl = tmpUserCliqueList.get(i).getClique();
-                //System.out.println(cl.getId());
-                tmpCliqueList.add(clc.getCliqueByID(cl.getId()));
-                //tmpCliqueList.add(cl);
-            }
+            //Cliqun Objekt
+            Clique tmpClique = clc.getCliqueByID(cliquenid);
             
             List<Events> tmpEventList = new ArrayList<>();
-            for(int i = 0; i < tmpCliqueList.size();i++){
-                tmpEventList.add(evc.getEventsByCliqueId(tmpCliqueList.get(i)));
-            }
+            tmpEventList = evc.getEventsByClique(tmpClique);
             
-            return Response.accepted(gson.toJson(tmpUserCliqueList)).build();
+            List<CustomEventResponse> tmpCERList = new ArrayList<>();
+            for(int i = 0; i < tmpEventList.size(); i++){
+                CustomEventResponse tmpCMR = new CustomEventResponse();  
+                String[] tmpSplit;
+                tmpSplit = tmpEventList.get(i).getPlace().split("\\s");
+                tmpCMR.setId(tmpEventList.get(i).getId());
+                tmpCMR.setCliqueId(tmpEventList.get(i).getClique().getId());
+                tmpCMR.setEventCity(tmpSplit[0]);
+                int number = Integer.parseInt(tmpSplit[1]);
+                
+                tmpCMR.setEventZip(number);
+                tmpCMR.setEventDate(tmpEventList.get(i).getCreateDate());
+                tmpCMR.setEventDescription(tmpEventList.get(i).getDescription());
+                tmpCMR.setEventName(tmpEventList.get(i).getName());
+                
+                UserEvent tmpUE = uec.getUserEventByEventIdUserId(tmpUser, tmpEventList.get(i));
+                
+                tmpCMR.setOpen(tmpUE.isOffen());
+                tmpCMR.setAccepted(tmpUE.isZusagen());
+                tmpCMR.setCanceled(tmpUE.isAbsagen());
+                tmpCERList.add(tmpCMR);
+            }
+            return Response.accepted(gson.toJson(tmpCERList)).build();
         } catch (Exception e) {
             return Response.status(404).build();
         }
