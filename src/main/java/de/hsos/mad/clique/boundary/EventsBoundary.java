@@ -149,7 +149,7 @@ public class EventsBoundary {
         }  
     }
     
-    @PUT
+    @GET
     @Path("update/{userid}/{eventid}/{status}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response updateEventStatus(@PathParam("userid")long userid, @PathParam("eventid")long eventid, @PathParam("status")boolean status){
@@ -164,7 +164,7 @@ public class EventsBoundary {
             return Response.status(202).build();
         } catch (Exception e) {
             return Response.status(404).build();
-        }
+        }   
     }
     
     @GET
