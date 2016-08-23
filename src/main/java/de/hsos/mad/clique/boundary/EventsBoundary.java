@@ -7,6 +7,7 @@ package de.hsos.mad.clique.boundary;
 
 import com.google.gson.Gson;
 import de.hsos.mad.clique.communication.CustomEventResponse;
+import de.hsos.mad.clique.communication.CustomResponse;
 import de.hsos.mad.clique.controller.CliqueController;
 import de.hsos.mad.clique.controller.EventsController;
 import de.hsos.mad.clique.controller.UserCliqueController;
@@ -153,6 +154,7 @@ public class EventsBoundary {
     @Path("update/{userid}/{eventid}/{status}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response updateEventStatus(@PathParam("userid")long userid, @PathParam("eventid")long eventid, @PathParam("status")boolean status){
+        CustomResponse tmpCR = new CustomResponse(true);
         try {
             Users tmpUser = new Users();
             tmpUser = usc.getUserById(userid);
@@ -161,9 +163,10 @@ public class EventsBoundary {
             tmpEvent = evc.getEventsById(eventid);
             
             uec.updateEventStatus(tmpEvent, tmpUser, status );
-            return Response.status(202).build();
+            return Response.accepted(gson.toJson(tmpCR)).build();
         } catch (Exception e) {
-            return Response.status(404).build();
+            tmpCR.setSuccess(false);
+            return Response.accepted(gson.toJson(tmpCR)).build();
         }   
     }
     
